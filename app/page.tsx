@@ -1,5 +1,5 @@
 import {
-  CalendlySection,
+  BookingSection,
   CaseStudiesPreviewSection,
   FinalCta,
   HeroSection,
@@ -24,7 +24,7 @@ export default function HomePage() {
       <ProcessSection />
       <CaseStudiesPreviewSection />
       <TestimonialsSection />
-      <CalendlySection />
+      <BookingSection />
       <FinalCta />
     </>
   );

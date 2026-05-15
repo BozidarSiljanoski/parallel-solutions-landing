@@ -18,7 +18,7 @@ type CtaBannerProps = {
 export function CtaBanner({
   title,
   description,
-  primaryHref = siteConfig.calendlyUrl,
+  primaryHref = siteConfig.bookingSectionHref,
   primaryLabel = "Book a discovery call",
   secondaryHref = "/contact",
   secondaryLabel = "Send a message",
@@ -37,11 +37,11 @@ export function CtaBanner({
           <h2 className="text-2xl font-semibold tracking-tight text-white md:text-3xl">
             {title}
           </h2>
-          <p className="mt-4 text-base text-teal-100/90 md:text-lg">{description}</p>
+          <p className="mt-4 text-base text-white/85 md:text-lg">{description}</p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Button
               size="lg"
-              className="min-w-[200px] bg-teal-400 text-slate-950 hover:bg-teal-300"
+              className="min-w-[200px] bg-brand text-white hover:bg-brand/90"
               render={
                 primaryExternal ? (
                   <a

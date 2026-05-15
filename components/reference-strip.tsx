@@ -24,7 +24,7 @@ export function ReferenceStrip({ compact = false }: { compact?: boolean }) {
               href={ref.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex items-center gap-2 text-sm text-foreground/80 transition-colors hover:text-teal-600 dark:hover:text-teal-400"
+              className="group flex items-center gap-2 text-sm text-foreground/80 transition-colors duration-200 hover:text-brand"
               data-testid={`reference-${ref.name.toLowerCase().replace(/\s+/g, "-")}`}
             >
               <Badge variant="outline" className="shrink-0">

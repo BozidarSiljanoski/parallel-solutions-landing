@@ -66,11 +66,12 @@ test.describe("Mobile responsive UI", () => {
     await expect(page.getByTestId("cta-book-call").first()).toBeVisible();
   });
 
-  test("calendly section renders embed container", async ({ page }) => {
-    const section = page.getByTestId("calendly-section");
+  test("booking section renders calendar and slots", async ({ page }) => {
+    const section = page.getByTestId("booking-section");
     await section.scrollIntoViewIfNeeded();
     await expect(section).toBeVisible();
-    await expect(page.getByTestId("calendly-embed")).toBeVisible();
+    await expect(page.getByTestId("booking-calendar")).toBeVisible();
+    await expect(page.getByTestId("booking-slots")).toBeVisible();
   });
 
   test("design references are present", async ({ page }) => {

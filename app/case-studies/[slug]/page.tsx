@@ -15,6 +15,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { SpinningBorder } from "@/components/ui/spinning-border";
 import { caseStudies, getCaseStudy, getCaseStudySlugs } from "@/lib/case-studies";
 import { siteConfig } from "@/lib/site-config";
 
@@ -59,7 +60,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
             <ArrowLeft data-icon="inline-start" />
             All case studies
           </Button>
-          <div className="flex h-40 w-full max-w-lg items-center justify-center rounded-2xl bg-linear-to-br from-teal-600/40 to-indigo-600/40 text-6xl font-bold text-white">
+          <div className="flex h-40 w-full max-w-lg items-center justify-center rounded-2xl bg-linear-to-br from-brand-navy/90 to-brand/40 text-6xl font-bold text-white">
             {study.placeholderImage}
           </div>
           <div className="mt-8 flex flex-wrap gap-2">
@@ -98,7 +99,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
               <p className="mt-4 text-muted-foreground leading-relaxed">{study.solution}</p>
             </section>
             {study.testimonial && (
-              <blockquote className="rounded-xl border border-teal-500/20 bg-teal-500/5 p-6">
+              <blockquote className="rounded-xl border border-brand/25 bg-brand-muted p-6">
                 <p className="text-lg italic">&ldquo;{study.testimonial.quote}&rdquo;</p>
                 <footer className="mt-4 text-sm">
                   <strong>{study.testimonial.author}</strong>
@@ -109,7 +110,8 @@ export default async function CaseStudyPage({ params }: PageProps) {
           </div>
 
           <aside className="space-y-6">
-            <Card>
+            <SpinningBorder>
+            <Card className="border-0 ring-0 shadow-sm">
               <CardHeader>
                 <CardTitle>Results</CardTitle>
                 <CardDescription>Key outcomes (placeholder metrics)</CardDescription>
@@ -117,7 +119,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
               <CardContent className="space-y-4">
                 {study.results.map((r) => (
                   <div key={r.metric} className="border-b border-border pb-3 last:border-0">
-                    <p className="text-2xl font-bold text-teal-600 dark:text-teal-400">
+                    <p className="text-2xl font-bold text-brand">
                       {r.value}
                     </p>
                     <p className="text-sm text-muted-foreground">{r.metric}</p>
@@ -125,15 +127,11 @@ export default async function CaseStudyPage({ params }: PageProps) {
                 ))}
               </CardContent>
             </Card>
+            </SpinningBorder>
             <Button
-              className="w-full bg-teal-600 text-white hover:bg-teal-500"
+              className="w-full shadow-sm"
               render={
-                <a
-                  href={siteConfig.calendlyUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  data-testid="case-study-book-call"
-                />
+                <Link href={siteConfig.bookingSectionHref} data-testid="case-study-book-call" />
               }
             >
               <Calendar data-icon="inline-start" />
@@ -151,7 +149,8 @@ export default async function CaseStudyPage({ params }: PageProps) {
             <h2 className="text-xl font-semibold">More success stories</h2>
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
               {others.map((other) => (
-                <Card key={other.slug}>
+                <SpinningBorder key={other.slug}>
+                <Card className="border-0 ring-0 shadow-sm">
                   <CardHeader>
                     <CardTitle className="text-lg">{other.client}</CardTitle>
                     <CardDescription>{other.summary}</CardDescription>
@@ -167,6 +166,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
                     </Button>
                   </CardContent>
                 </Card>
+                </SpinningBorder>
               ))}
             </div>
           </section>

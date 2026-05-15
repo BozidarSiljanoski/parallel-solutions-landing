@@ -1,6 +1,7 @@
 import sgMail from "@sendgrid/mail";
 import { NextResponse } from "next/server";
 
+import { formatSlotForEmail } from "@/lib/booking";
 import { contactFormSchema } from "@/lib/validations/contact";
 
 export async function POST(request: Request) {
@@ -31,6 +32,9 @@ export async function POST(request: Request) {
 
     const data = parsed.data;
     const fullName = `${data.firstName} ${data.lastName}`;
+    const meetingLine = data.preferredMeetingAt
+      ? `Preferred meeting (30 min): ${formatSlotForEmail(data.preferredMeetingAt)}`
+      : null;
 
     await sgMail.send({
       to: toEmail,
@@ -44,6 +48,7 @@ export async function POST(request: Request) {
         `Company: ${data.company}`,
         data.jobTitle ? `Job title: ${data.jobTitle}` : null,
         data.region ? `Region: ${data.region}` : null,
+        meetingLine,
         "",
         "Message:",
         data.message,
@@ -58,6 +63,7 @@ export async function POST(request: Request) {
         <p><strong>Company:</strong> ${data.company}</p>
         ${data.jobTitle ? `<p><strong>Job title:</strong> ${data.jobTitle}</p>` : ""}
         ${data.region ? `<p><strong>Region:</strong> ${data.region}</p>` : ""}
+        ${meetingLine ? `<p><strong>${meetingLine}</strong></p>` : ""}
         <p><strong>Message:</strong></p>
         <p>${data.message.replace(/\n/g, "<br>")}</p>
       `,

@@ -32,7 +32,17 @@ test.describe("Contact page", () => {
     expect(hasOverflow).toBe(false);
   });
 
-  test("calendly embed is present on contact page", async ({ page }) => {
-    await expect(page.getByTestId("calendly-embed")).toBeVisible();
+  test("slot query param prefills meeting time", async ({ page }) => {
+    const slot = new Date();
+    slot.setDate(slot.getDate() + 2);
+    slot.setHours(10, 0, 0, 0);
+    while (slot.getDay() === 0 || slot.getDay() === 6) {
+      slot.setDate(slot.getDate() + 1);
+    }
+
+    await page.goto(`/contact?slot=${encodeURIComponent(slot.toISOString())}`);
+    const meetingInput = page.getByTestId("contact-meeting-slot");
+    await expect(meetingInput).toBeVisible();
+    await expect(meetingInput).not.toHaveValue("");
   });
 });

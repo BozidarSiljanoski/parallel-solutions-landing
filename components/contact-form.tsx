@@ -1,12 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Loader2, Send } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  SLOT_QUERY_PARAM,
+  formatSlotForEmail,
+  isoToDatetimeLocal,
+  isBookableSlot,
+} from "@/lib/booking";
 import type { ContactFormInput } from "@/lib/validations/contact";
 
 const initialState: ContactFormInput = {
@@ -16,14 +23,28 @@ const initialState: ContactFormInput = {
   phone: "",
   company: "",
   jobTitle: "",
+  preferredMeetingAt: "",
   message: "",
   region: undefined,
 };
 
 export function ContactForm() {
+  const searchParams = useSearchParams();
   const [form, setForm] = useState<ContactFormInput>(initialState);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [slotFromUrl, setSlotFromUrl] = useState(false);
+
+  useEffect(() => {
+    const slot = searchParams.get(SLOT_QUERY_PARAM);
+    if (slot && isBookableSlot(slot)) {
+      setForm((prev) => ({
+        ...prev,
+        preferredMeetingAt: isoToDatetimeLocal(slot),
+      }));
+      setSlotFromUrl(true);
+    }
+  }, [searchParams]);
 
   function updateField<K extends keyof ContactFormInput>(
     key: K,
@@ -37,11 +58,18 @@ export function ContactForm() {
     setStatus("loading");
     setErrorMessage(null);
 
+    const payload = {
+      ...form,
+      preferredMeetingAt: form.preferredMeetingAt
+        ? new Date(form.preferredMeetingAt).toISOString()
+        : undefined,
+    };
+
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify(payload),
       });
       const data = (await res.json()) as { error?: string; message?: string };
 
@@ -53,11 +81,17 @@ export function ContactForm() {
 
       setStatus("success");
       setForm(initialState);
+      setSlotFromUrl(false);
     } catch {
       setStatus("error");
       setErrorMessage("Network error. Please check your connection and try again.");
     }
   }
+
+  const slotPreview =
+    form.preferredMeetingAt && !Number.isNaN(new Date(form.preferredMeetingAt).getTime())
+      ? formatSlotForEmail(new Date(form.preferredMeetingAt).toISOString())
+      : null;
 
   return (
     <form
@@ -65,6 +99,16 @@ export function ContactForm() {
       className="space-y-5"
       data-testid="contact-form"
     >
+      {slotFromUrl && slotPreview && (
+        <p
+          className="rounded-lg border border-brand/30 bg-brand-muted px-4 py-3 text-sm text-brand-navy"
+          data-testid="contact-slot-banner"
+        >
+          You selected a <strong>30-minute discovery call</strong> for{" "}
+          <strong>{slotPreview}</strong>. Confirm below or pick another time.
+        </p>
+      )}
+
       <div className="grid gap-5 sm:grid-cols-2">
         <div className="space-y-2">
           <Label htmlFor="firstName">First name *</Label>
@@ -141,6 +185,31 @@ export function ContactForm() {
       </div>
 
       <div className="space-y-2">
+        <Label htmlFor="preferredMeetingAt">
+          Preferred meeting time
+          <span className="font-normal text-muted-foreground"> (30 min)</span>
+        </Label>
+        <Input
+          id="preferredMeetingAt"
+          name="preferredMeetingAt"
+          type="datetime-local"
+          value={form.preferredMeetingAt ?? ""}
+          onChange={(e) => {
+            setSlotFromUrl(false);
+            updateField("preferredMeetingAt", e.target.value);
+          }}
+          data-testid="contact-meeting-slot"
+        />
+        <p className="text-xs text-muted-foreground">
+          Pick a slot on the{" "}
+          <a href="/#book" className="text-brand hover:underline">
+            booking calendar
+          </a>{" "}
+          or choose a time here.
+        </p>
+      </div>
+
+      <div className="space-y-2">
         <Label htmlFor="region">Region</Label>
         <select
           id="region"
@@ -178,7 +247,7 @@ export function ContactForm() {
 
       {status === "success" && (
         <p
-          className="rounded-lg border border-teal-500/30 bg-teal-500/10 px-4 py-3 text-sm text-teal-800 dark:text-teal-200"
+          className="rounded-lg border border-brand/30 bg-brand-muted px-4 py-3 text-sm text-brand-navy"
           data-testid="contact-success"
           role="status"
         >

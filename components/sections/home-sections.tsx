@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 
 import { AbstractBackground } from "@/components/abstract-background";
-import { CalendlyEmbed } from "@/components/calendly-embed";
+import { BookingCalendar } from "@/components/booking-calendar";
 import { CtaBanner } from "@/components/cta-banner";
 import { ReferenceStrip } from "@/components/reference-strip";
 import { Badge } from "@/components/ui/badge";
@@ -24,6 +24,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { SpinningBorder } from "@/components/ui/spinning-border";
 import { caseStudies } from "@/lib/case-studies";
 import {
   heroStats,
@@ -50,29 +51,26 @@ export function HeroSection() {
         className="mx-auto max-w-6xl px-4 pb-20 pt-16 md:px-6 md:pb-28 md:pt-24"
         data-testid="hero-section"
       >
-        <Badge className="mb-6 bg-teal-500/10 text-teal-700 dark:text-teal-300">
-          B2B pipeline development · SDR outsourcing
+        <Badge
+          variant="outline"
+          className="mb-6 border-brand/20 bg-brand-muted/80 font-medium tracking-wide text-brand-navy uppercase"
+        >
+          {siteConfig.tagline}
         </Badge>
-        <h1 className="max-w-4xl text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">
-          We&apos;ve got the{" "}
-          <span className="bg-linear-to-r from-teal-600 to-indigo-600 bg-clip-text text-transparent">
-            secret sauce
-          </span>{" "}
-          for your pipeline
+        <h1 className="max-w-4xl text-4xl leading-[1.1] md:text-5xl lg:text-6xl">
+          Build pipeline that <span className="text-gradient-brand">closes</span>
         </h1>
-        <p className="mt-6 max-w-2xl text-lg text-muted-foreground md:text-xl">
-          Whether you need SDRs, sales performance enhancement, SalesOps, or expert
-          development — we build qualified meetings so your team can focus on closing.
+        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground md:text-xl">
+          Fit-to-purpose SDR teams, appointment setting, and RevOps — so your closers
+          focus on deals, not prospecting.
         </p>
         <div className="mt-10 flex flex-col gap-3 sm:flex-row">
           <Button
             size="lg"
-            className="bg-teal-600 text-white hover:bg-teal-500"
+            className="shadow-sm"
             render={
               <a
-                href={siteConfig.calendlyUrl}
-                target="_blank"
-                rel="noopener noreferrer"
+                href={siteConfig.bookingSectionHref}
                 data-testid="hero-book-call"
               />
             }
@@ -109,7 +107,7 @@ export function StatsSection() {
       <div className="mx-auto grid max-w-6xl grid-cols-2 gap-8 px-4 md:grid-cols-4 md:px-6">
         {heroStats.map((stat) => (
           <div key={stat.label} className="text-center">
-            <p className="text-3xl font-bold text-teal-600 dark:text-teal-400 md:text-4xl">
+            <p className="text-3xl font-bold text-brand md:text-4xl">
               {stat.value}
             </p>
             <p className="mt-1 text-sm text-muted-foreground">{stat.label}</p>
@@ -149,7 +147,7 @@ export function ServicesSection() {
       <section data-testid="services-section">
         <div className="mx-auto max-w-6xl px-4 md:px-6">
           <div className="max-w-2xl">
-            <h2 className="text-3xl font-bold tracking-tight md:text-4xl">Our services</h2>
+            <h2 className="text-3xl md:text-4xl">Our services</h2>
             <p className="mt-4 text-muted-foreground">
               Outsourced sales solutions to make growth simple — from appointment setting to
               full RevOps support.
@@ -159,12 +157,10 @@ export function ServicesSection() {
             {services.map((service) => {
               const Icon = serviceIcons[service.icon];
               return (
-                <Card
-                  key={service.title}
-                  className="group border-border/80 transition-shadow hover:shadow-lg"
-                >
+                <SpinningBorder key={service.title} className="h-full">
+                <Card className="group h-full border-0 ring-0 shadow-sm transition-shadow duration-200 hover:shadow-md">
                   <CardHeader>
-                    <div className="mb-2 flex size-10 items-center justify-center rounded-lg bg-teal-500/10 text-teal-600">
+                    <div className="mb-2 flex size-10 items-center justify-center rounded-lg bg-brand-muted text-brand">
                       <Icon className="size-5" />
                     </div>
                     <CardTitle>{service.title}</CardTitle>
@@ -173,12 +169,13 @@ export function ServicesSection() {
                   <CardContent>
                     <Link
                       href="/contact"
-                      className="inline-flex items-center gap-1 text-sm font-medium text-teal-600 hover:underline dark:text-teal-400"
+                      className="inline-flex items-center gap-1 text-sm font-medium text-brand hover:underline"
                     >
                       Learn more <ArrowRight className="size-3.5" />
                     </Link>
                   </CardContent>
                 </Card>
+                </SpinningBorder>
               );
             })}
           </div>
@@ -186,9 +183,7 @@ export function ServicesSection() {
             <Button
               render={
                 <a
-                  href={siteConfig.calendlyUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href={siteConfig.bookingSectionHref}
                   data-testid="services-book-call"
                 />
               }
@@ -234,7 +229,7 @@ export function WhyUsSection() {
                 key={point}
                 className="flex gap-3 rounded-lg border border-border bg-card p-4 text-sm"
               >
-                <LineChart className="mt-0.5 size-4 shrink-0 text-teal-600" />
+                <LineChart className="mt-0.5 size-4 shrink-0 text-brand" />
                 {point}
               </li>
             ))}
@@ -263,9 +258,9 @@ export function ProcessSection() {
           {steps.map((step) => (
             <div
               key={step.n}
-              className="relative rounded-xl border border-border bg-card p-6 animate-fade-in-up"
+              className="relative rounded-lg border border-border bg-card p-6 shadow-sm animate-fade-in-up"
             >
-              <span className="text-4xl font-bold text-teal-500/20">{step.n}</span>
+              <span className="text-4xl font-bold text-brand/20">{step.n}</span>
               <h3 className="mt-2 font-semibold">{step.title}</h3>
               <p className="mt-1 text-sm text-muted-foreground">{step.desc}</p>
             </div>
@@ -301,10 +296,10 @@ export function CaseStudiesPreviewSection() {
           {caseStudies.map((study) => (
             <Card
               key={study.slug}
-              className="overflow-hidden transition-shadow hover:shadow-lg"
+              className="overflow-hidden border-border/80 shadow-sm transition-all duration-200 hover:border-brand/25 hover:shadow-md"
               data-testid={`case-study-card-${study.slug}`}
             >
-              <div className="flex h-32 items-center justify-center bg-linear-to-br from-teal-900/80 to-indigo-900/80 text-4xl font-bold text-white/90">
+              <div className="flex h-32 items-center justify-center bg-linear-to-br from-brand-navy to-brand-navy-light text-4xl font-bold text-white/90">
                 {study.placeholderImage}
               </div>
               <CardHeader>
@@ -355,7 +350,8 @@ export function TestimonialsSection() {
           </h2>
           <div className="mt-12 grid gap-6 md:grid-cols-3">
             {testimonials.map((t) => (
-              <Card key={t.author} className="bg-card/80 backdrop-blur-sm">
+              <SpinningBorder key={t.author} className="h-full">
+              <Card className="h-full border-0 bg-card/95 ring-0 shadow-sm backdrop-blur-sm">
                 <CardContent className="pt-6">
                   <div className="flex gap-0.5 text-amber-500">
                     {Array.from({ length: t.rating }).map((_, i) => (
@@ -367,6 +363,7 @@ export function TestimonialsSection() {
                   <p className="text-sm text-muted-foreground">{t.role}</p>
                 </CardContent>
               </Card>
+              </SpinningBorder>
             ))}
           </div>
         </div>
@@ -376,12 +373,12 @@ export function TestimonialsSection() {
   );
 }
 
-export function CalendlySection() {
+export function BookingSection() {
   return (
     <section
       id="book"
       className="scroll-mt-20 border-t border-border py-20 md:py-28"
-      data-testid="calendly-section"
+      data-testid="booking-section"
     >
       <div className="mx-auto max-w-6xl px-4 md:px-6">
         <div className="mx-auto max-w-2xl text-center">
@@ -389,12 +386,12 @@ export function CalendlySection() {
             Book a discovery call
           </h2>
           <p className="mt-4 text-muted-foreground">
-            Pick a time that works — we&apos;ll walk through your ICP, motion, and pipeline
-            goals.
+            Choose a date and 30-minute slot — we&apos;ll open the contact form with your
+            time filled in.
           </p>
         </div>
         <div className="mt-10">
-          <CalendlyEmbed />
+          <BookingCalendar />
         </div>
       </div>
     </section>
@@ -417,7 +414,7 @@ export function FinalCta() {
       id="final-cta"
       title="Ready to accelerate growth?"
       description="Join 200+ companies that trust Parallel Solutions for qualified pipeline development."
-      primaryLabel="Schedule on Calendly"
+      primaryLabel="Book a discovery call"
       secondaryLabel="Contact our team"
     />
   );

@@ -1,14 +1,13 @@
 export const siteConfig = {
   name: "Parallel Solutions",
-  tagline: "B2B pipeline development & outsourced sales teams",
+  tagline: "Outsourced lead generation. Real results.",
   description:
-    "We build qualified pipeline for growth-stage B2B companies — SDR outsourcing, sales ops, and revenue operations that let your closers focus on closing.",
+    "Parallel Solutions builds qualified B2B pipeline for growth-stage companies — SDR outsourcing, appointment setting, and revenue operations so your team can focus on closing.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
   contactEmail: "hello@parallelsolutions.example",
   phone: "+1 (555) 012-3400",
   address: "128 Market Street, Suite 400, San Francisco, CA",
-  calendlyUrl:
-    process.env.NEXT_PUBLIC_CALENDLY_URL ?? "https://calendly.com/yourname/30min",
+  bookingSectionHref: "/#book",
   social: {
     linkedin: "https://linkedin.com/company/parallel-solutions",
     twitter: "https://twitter.com/parallelsolutions",
